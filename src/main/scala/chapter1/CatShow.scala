@@ -8,4 +8,8 @@ object CatShow extends App {
   val showInt = Show.apply[Int]
 
   println(showInt.show(1))
+
+  import cats.syntax.show._
+  val shownInt123 = 123.show
+  println(shownInt123)
 }
