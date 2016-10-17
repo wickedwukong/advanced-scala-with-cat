@@ -33,7 +33,10 @@ class InputIO(input: BufferedReader) {
 class OutputIO(output: Writer) {
   private val printWriter: PrintWriter = new PrintWriter(output)
 
-  def printLine(value: String): IO[Unit] = IO(printWriter.println(value))
+  def printLine(value: String): IO[Unit] = IO{
+    printWriter.println(value)
+    printWriter.flush()
+  }
 }
 
 object FahrenheitToCelsiusWithIOMonad {
@@ -52,13 +55,10 @@ class FahrenheitToCelsiusWithIOMonad(input: BufferedReader, output: Writer) {
   //  }.toOption
 
   def run= {
-    val line: IO[Unit] = outputIO.printLine("hello")
-    line.run
-
-//    for {
-//      _ <- outputIO.printLine("Enter a temperature in degrees Fahrenheit:")
-//      doubleValue <- inputIO.readLine.map(_.toDouble)
-//      _ <- outputIO.printLine(fahrenheitToCelsius(doubleValue).toString)
-//    } yield ()
+    for {
+      _ <- outputIO.printLine("Enter a temperature in degrees Fahrenheit:")
+      doubleValue <- inputIO.readLine.map(_.toDouble)
+      _ <- outputIO.printLine(fahrenheitToCelsius(doubleValue).toString)
+    } yield ()
   }
 }
