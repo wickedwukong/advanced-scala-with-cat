@@ -11,7 +11,7 @@ class FahrenheitToCelsiusSpec extends Specification {
 
 
   "The application" should {
-      "Should first ask to input a temperature in Fahrenheit" in {
+      "first ask to input a temperature in Fahrenheit" in {
         val output: StringWriter = new StringWriter()
         val emptyInput: Source = Source.fromIterable(List.empty)
 
@@ -20,9 +20,20 @@ class FahrenheitToCelsiusSpec extends Specification {
         output.toString must_==("What is the temperature in Fahrenheit?\n")
 
       }
-      "start with 'Hello'" in {
-        "Hello world" must startWith("Hello")
+
+      "32 in Fahrenheit is 0 in Celsius " in {
+        val output: StringWriter = new StringWriter()
+        val fahrenheit32: Source = Source.fromIterable(List(32))
+
+
+        new FahrenheitToCelsius(fahrenheit32, output).run
+
+        val expectedOutput = """What is the temperature in Fahrenheit?
+                             |0""".stripMargin
+
+        output.toString must_==(expectedOutput)
       }
+
       "end with 'world'" in {
         "Hello world" must endWith("world")
       }

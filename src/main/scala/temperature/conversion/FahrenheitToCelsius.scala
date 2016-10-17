@@ -1,11 +1,13 @@
 package temperature.conversion
 
-import java.io.StringWriter
+import java.io.{PrintWriter, StringWriter, Writer}
 
 import scala.io.Source
 
-class FahrenheitToCelsius(emptyInput: Source, output: StringWriter) {
+class FahrenheitToCelsius(input: Source, output: Writer) {
 
-  def run: Unit = {}
+  def run: Unit = {
+    new PrintWriter(output).println("What is the temperature in Fahrenheit?")
+  }
 
 }
