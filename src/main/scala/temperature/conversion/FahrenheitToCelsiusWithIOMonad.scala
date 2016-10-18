@@ -58,3 +58,18 @@ class FahrenheitToCelsiusWithIOMonad(input: BufferedReader, output: Writer) {
     } yield ()
   }
 }
+
+object IOMonadDemo extends App {
+  val input = new BufferedReader(new InputStreamReader(java.lang.System.in))
+  val output: OutputStreamWriter = new OutputStreamWriter(System.out)
+
+  val outputIO = new OutputIO(output)
+  val inputIO = new InputIO(input)
+
+  inputIO.readLine.flatMap(outputIO.printLine(_)).run
+
+  val parseIntIO: IO[Int] = inputIO.readLine.map(_.toInt)
+
+  println(parseIntIO.run * 2)
+
+}

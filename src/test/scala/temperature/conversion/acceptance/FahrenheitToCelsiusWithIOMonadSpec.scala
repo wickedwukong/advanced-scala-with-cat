@@ -17,7 +17,6 @@ class FahrenheitToCelsiusWithIOMonadSpec extends Specification {
       new FahrenheitToCelsiusWithIOMonad(emptyInput, output).execute.run
 
       output.toString must_== ("Enter a temperature in degrees Fahrenheit:\n")
-
     }
 
     "32 in Fahrenheit is 0 in Celsius " in {
