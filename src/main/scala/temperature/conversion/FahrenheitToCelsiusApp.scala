@@ -2,8 +2,6 @@ package temperature.conversion
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 
-import scala.io.Source
-
 object FahrenheitToCelsiusApp extends App {
   val input = new BufferedReader(new InputStreamReader(java.lang.System.in))
 
