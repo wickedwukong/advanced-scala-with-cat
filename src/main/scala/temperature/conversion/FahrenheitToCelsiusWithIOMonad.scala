@@ -50,11 +50,7 @@ class FahrenheitToCelsiusWithIOMonad(input: BufferedReader, output: Writer) {
   val outputIO = new OutputIO(output)
   val inputIO = new InputIO(input)
 
-  //  def toDouble(value: String): Option[Double] = Try {
-  //    value.toDouble
-  //  }.toOption
-
-  def run= {
+  def execute= {
     for {
       _ <- outputIO.printLine("Enter a temperature in degrees Fahrenheit:")
       doubleValue <- inputIO.readLine.map(_.toDouble)
