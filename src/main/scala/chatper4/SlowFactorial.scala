@@ -49,15 +49,15 @@ object SlowFactorialWithWriterMonad {
   }
 
   def factorial(n: Int): Logged[Int] = {
-    def doIt(loggedFactorial: Logged[Int]): Logged[Int] = {
+    def factorialWithLogged(loggedFactorial: Logged[Int]): Logged[Int] = {
       for {
         n <- loggedFactorial
-        _ <- Vector(s"n is: $n").tell
-        result <- slowly(if (n == 0) 1.pure[Logged] else factorial(n).map(_ * n))
+        result <- slowly(if (n == 0) 1.pure[Logged] else factorial(n - 1).map(_ * n))
+        _ <- Vector(s"n is: $n result is: $result").tell
       } yield result
     }
 
-    doIt(n.pure[Logged])
+    factorialWithLogged(n.pure[Logged])
   }
 
 }
@@ -73,9 +73,8 @@ object WriterMonadDemoWithWriterMonadApp extends App {
 
   val results: List[Logged[Int]] = Await.result(futureFactorials, Duration.Inf)
 
-  println("hello1")
   results.map(_.run).foreach{ case (messages, result) => {
-    println(s"logs: $messages")
+    println(messages.mkString("\n"))
     println(s"result: $result")
   }}
 
