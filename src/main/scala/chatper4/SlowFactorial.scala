@@ -60,6 +60,16 @@ object SlowFactorialWithWriterMonad {
     factorialWithLogged(n.pure[Logged])
   }
 
+  def factorial2(n: Int): Logged[Int] = {
+    if (n == 0) {
+      1.pure[Logged]
+    } else {
+      for {
+        fact <- slowly(factorial2(n -1))
+        _ <- Vector(s"n is: $n result is: $fact").tell
+      } yield {n * fact}
+    }
+  }
 }
 
 
@@ -74,7 +84,16 @@ object WriterMonadDemoWithWriterMonadApp extends App {
   val results: List[Logged[Int]] = Await.result(futureFactorials, Duration.Inf)
 
   results.map(_.run).foreach{ case (messages, result) => {
-    println(messages.mkString("\n"))
+    println(s"logs: $messages")
+    println(s"result: $result")
+  }}
+
+  var futureFactorials2: Future[List[Logged[Int]]] = Future.sequence(List(Future(factorial2(5)), Future(factorial2(5))))
+
+  val results2: List[Logged[Int]] = Await.result(futureFactorials2, Duration.Inf)
+
+  results2.map(_.run).foreach{ case (messages, result) => {
+    println(s"logs: $messages")
     println(s"result: $result")
   }}
 
