@@ -91,8 +91,11 @@ object PostOrderCalculatorApp extends App {
   val program = for {
     _ <- myEvalOne("1")
     _ <- myEvalOne("2")
-    ans <- myEvalOne("+")
-  } yield ans
+    calculationResult <- myEvalOne("+")
+  } yield {
+    println(s"calculationResult is $calculationResult")
+    calculationResult
+  }
 
   println(program.run(List.empty).value)
 
