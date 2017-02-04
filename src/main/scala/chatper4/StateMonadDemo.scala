@@ -38,23 +38,23 @@ object StateMonadDemo extends App {
 
 object Experiment extends App {
 
-  trait Check[A] {
+  trait ValueCheck[A] {
     def check(a: A): Int
   }
 
   trait CheckBinding[A] {
-    def a: A
+    def getValue: A
 
-    def getCheck: Check[A]
+    def getCheck: ValueCheck[A]
 
-    def doIt: Int = getCheck.check(a)
+    def doCheckValue: Int = getCheck.check(getValue)
   }
 
-  class MaxRowCheck extends Check[Int] {
+  class MaxRowValueCheck extends ValueCheck[Int] {
     override def check(a: Int): Int = 1
   }
 
-  class MinRowCheck extends Check[String] {
+  class MinRowValueCheck extends ValueCheck[String] {
     override def check(a: String): Int = 2
   }
 
@@ -65,15 +65,15 @@ object Experiment extends App {
   }
 
   class MaxRowCheckBinding(ints: => Seq[Int]) extends CheckBinding[Int] {
-    override def a: Int = AProvider.intA(ints)
+    override def getValue: Int = AProvider.intA(ints)
 
-    override def getCheck: Check[Int] = new MaxRowCheck()
+    override def getCheck: ValueCheck[Int] = new MaxRowValueCheck()
   }
 
   class MinRowCheckBinding(ints: => Seq[Int]) extends CheckBinding[String] {
-    override def a: String = AProvider.stringA(ints)
+    override def getValue: String = AProvider.stringA(ints)
 
-    override def getCheck: Check[String] = new MinRowCheck()
+    override def getCheck: ValueCheck[String] = new MinRowValueCheck()
   }
 
   def getInts: Seq[Int] = Seq(1, 2, 3)
@@ -83,7 +83,7 @@ object Experiment extends App {
     "MinRowCheck" -> new MinRowCheckBinding(getInts))
 
   private val map: Option[Int] = checkBindMap.get("MinRowCheck").map { bind => {
-    bind.doIt
+    bind.doCheckValue
   }
   }
   println(map)
@@ -92,22 +92,22 @@ object Experiment extends App {
 
 object Experiment2 extends App {
 
-  trait Check[A] {
+  trait ValueCheck[A] {
     def check(a: A): Int
   }
 
-  class MaxRowCheck extends Check[Int] {
+  class MaxRowValueCheck extends ValueCheck[Int] {
     override def check(a: Int): Int = 1
   }
 
-  class MinRowCheck extends Check[String] {
+  class MinRowValueCheck extends ValueCheck[String] {
     override def check(a: String): Int = 2
   }
 
   trait CheckBinding {
     type A
-    def getA: A
-    def getCheck: Check[A]
+    def getValue: A
+    def getValueCheck: ValueCheck[A]
   }
 
   object AProvider {
@@ -121,17 +121,17 @@ object Experiment2 extends App {
   class MinRowCheckBinding(ints: => Seq[Int]) extends CheckBinding {
     override type A = String
 
-    override def getCheck: Check[String] = new MinRowCheck()
+    override def getValueCheck: ValueCheck[String] = new MinRowValueCheck()
 
-    override def getA: String = AProvider.stringA(ints)
+    override def getValue: String = AProvider.stringA(ints)
   }
 
   class MaxRowCheckBinding(ints: => Seq[Int]) extends CheckBinding {
     override type A = Int
 
-    override def getA: Int = AProvider.intA(ints)
+    override def getValue: Int = AProvider.intA(ints)
 
-    override def getCheck: Check[Int] = new MaxRowCheck()
+    override def getValueCheck: ValueCheck[Int] = new MaxRowValueCheck()
   }
 
   val checkBindMap: Map[String, CheckBinding] = Map(
@@ -139,7 +139,7 @@ object Experiment2 extends App {
     "MinRowCheck" -> new MinRowCheckBinding(getInts))
 
   private val map: Option[Int] = checkBindMap.get("MaxRowCheck").map { bind => {
-    bind.getCheck.check(bind.getA)
+    bind.getValueCheck.check(bind.getValue)
   }}
 
   println(map)
