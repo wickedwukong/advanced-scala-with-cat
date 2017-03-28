@@ -14,7 +14,6 @@ object CartesianDemo extends App {
 
   (Option("Garfield") |@| Option(1978) |@| Option("Orange and black")).map(AnotherCat.apply)
 
-
   case class Cat(
                   name: String,
                   yearOfBirth: Int,
