@@ -1,0 +1,34 @@
+package chapter6
+
+object CartesianDemo extends App {
+
+  import cats.Monoid
+  import cats.instances.boolean._
+  import cats.instances.int._
+  import cats.instances.list._
+  import cats.instances.string._
+  import cats.syntax.cartesian._
+
+  case class Cat(
+                  name: String,
+                  yearOfBirth: Int,
+                  favoriteFoods: List[String]
+                )
+
+  def catToTuple(cat: Cat) =
+    (cat.name, cat.yearOfBirth, cat.favoriteFoods)
+
+  implicit val catMonoid: Monoid[Cat] = (
+    Monoid[String] |@|
+      Monoid[Int] |@|
+      Monoid[List[String]]
+    ).imap(Cat.apply)(catToTuple)
+
+
+  import cats.syntax.monoid._
+
+  val emptyCat: Cat = Monoid[Cat].empty
+
+  println(emptyCat)
+
+}
