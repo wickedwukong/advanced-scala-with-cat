@@ -31,4 +31,11 @@ object CartesianDemo extends App {
 
   println(emptyCat)
 
+
+  val garfield   = Cat("Garfield", 1978, List("Lasagne"))
+  val heathcliff = Cat("Heathcliff", 1988, List("Junk Food"))
+
+  val twoCats: Cat = garfield |+| heathcliff
+
+  println(twoCats)
 }
