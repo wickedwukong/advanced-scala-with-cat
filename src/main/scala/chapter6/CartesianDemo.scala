@@ -7,7 +7,13 @@ object CartesianDemo extends App {
   import cats.instances.int._
   import cats.instances.list._
   import cats.instances.string._
+  import cats.instances.option._
   import cats.syntax.cartesian._
+
+  case class AnotherCat(name: String, born: Int, color: String)
+
+  (Option("Garfield") |@| Option(1978) |@| Option("Orange and black")).map(AnotherCat.apply)
+
 
   case class Cat(
                   name: String,

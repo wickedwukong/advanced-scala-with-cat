@@ -1,6 +1,7 @@
 package chapter5
 
-import cats.data.{Writer, Xor, XorT}
+import cats.data.Writer
+//import cats.data.{Xor, XorT}
 import cats.implicits._
 
 import scala.concurrent.Await
@@ -32,51 +33,51 @@ object MonadTransformerDemo extends App {
 
 }
 
-object FutureXorMonadTransformerDemo extends App {
-
-  import scala.concurrent.Future
-  import cats.instances.future._
-  import cats.syntax.flatMap._
-  import scala.concurrent.ExecutionContext.Implicits.global
-  import scala.concurrent.duration._
-
-
-  type FutureXor[A] = XorT[Future, String, A]
-
-
-  val loadAverages = Map(
-    "a.example.com" -> 0.1,
-    "b.example.com" -> 0.5,
-    "c.example.com" -> 0.2
-  )
-
-  def getLoad(hostname: String): FutureXor[Double] = {
-    loadAverages.get(hostname) match {
-      case Some(avg) => XorT.right(Future.successful(avg))
-      case None => XorT.left(Future.successful(s"Host unreachable: $hostname"))
-    }
-  }
-
-  def getMeanLoad(hostnames: List[String]): FutureXor[Double] = {
-    import cats.instances.list._
-    import cats.syntax.traverse._
-
-    hostnames.length match {
-      case 0 => XorT.left(Future.successful(s"No hosts to contact"))
-      case n => hostnames.map(getLoad).sequence.map(_.sum / n)
-    }
-  }
-
-  getMeanLoad(List("a.example.com"))
-
-
-  def report[A](input: FutureXor[A]): Unit = {
-    Await.result(input.value, 2.seconds).fold(
-      msg => println("[FAIL] " + msg),
-      ans => println("[DONE] " + ans)
-    )
-  }
-
-  report(getMeanLoad(List("a.example.com", "b.example.com")))
-}
+//object FutureXorMonadTransformerDemo extends App {
+//
+//  import scala.concurrent.Future
+//  import cats.instances.future._
+//  import cats.syntax.flatMap._
+//  import scala.concurrent.ExecutionContext.Implicits.global
+//  import scala.concurrent.duration._
+//
+//
+//  type FutureXor[A] = XorT[Future, String, A]
+//
+//
+//  val loadAverages = Map(
+//    "a.example.com" -> 0.1,
+//    "b.example.com" -> 0.5,
+//    "c.example.com" -> 0.2
+//  )
+//
+//  def getLoad(hostname: String): FutureXor[Double] = {
+//    loadAverages.get(hostname) match {
+//      case Some(avg) => XorT.right(Future.successful(avg))
+//      case None => XorT.left(Future.successful(s"Host unreachable: $hostname"))
+//    }
+//  }
+//
+//  def getMeanLoad(hostnames: List[String]): FutureXor[Double] = {
+//    import cats.instances.list._
+//    import cats.syntax.traverse._
+//
+//    hostnames.length match {
+//      case 0 => XorT.left(Future.successful(s"No hosts to contact"))
+//      case n => hostnames.map(getLoad).sequence.map(_.sum / n)
+//    }
+//  }
+//
+//  getMeanLoad(List("a.example.com"))
+//
+//
+//  def report[A](input: FutureXor[A]): Unit = {
+//    Await.result(input.value, 2.seconds).fold(
+//      msg => println("[FAIL] " + msg),
+//      ans => println("[DONE] " + ans)
+//    )
+//  }
+//
+//  report(getMeanLoad(List("a.example.com", "b.example.com")))
+//}
 
