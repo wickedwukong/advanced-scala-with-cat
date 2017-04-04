@@ -37,10 +37,24 @@ object CartesianDemo extends App {
   println(emptyCat)
 
 
-  val garfield   = Cat("Garfield", 1978, List("Lasagne"))
+  val garfield = Cat("Garfield", 1978, List("Lasagne"))
   val heathcliff = Cat("Heathcliff", 1988, List("Junk Food"))
 
   val twoCats: Cat = garfield |+| heathcliff
 
   println(twoCats)
+
+
+  import scala.language.higherKinds
+  import cats.Monad
+
+  def product[M[_] : Monad, A, B](fa: M[A], fb: M[B]): M[(A, B)] = {
+    import cats.syntax.flatMap._
+    import cats.syntax.functor._
+
+    for {
+      a <- fa
+      b <- fb
+    } yield (a, b)
+  }
 }
