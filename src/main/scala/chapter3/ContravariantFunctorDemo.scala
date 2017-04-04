@@ -1,7 +1,5 @@
 package chapter3
 
-import cats.Cartesian
-
 trait Printable[A] {
   self =>
   def format(value: A): String
