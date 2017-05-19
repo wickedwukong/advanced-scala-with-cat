@@ -35,4 +35,19 @@ object InvariantFunctorDemo extends App {
   println(s"encode Box(123) to 123 : ${boxCodec.encode(Box[Int](123))}")
   println(s"decode 123 to Box(123): ${boxCodec.decode("123")}")
 
+
+
+  //This demonstrate, if you have a Show[String], and you have a function to do (Symbol) => String
+  //Then you can use contramap to get a Show[Symbol] from Show String
+
+  import cats.Show
+  import cats.functor.Contravariant
+  import cats.instances.string._
+
+  val showString = Show[String]
+
+  val showSymbol: Show[Symbol] = Contravariant[Show].
+    contramap(showString)((sym: Symbol) => s"'${sym.name}")
+
+  println(s"show symbol: ${showSymbol.show('david)}")
 }
