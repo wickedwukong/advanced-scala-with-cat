@@ -1,5 +1,7 @@
 package chapter6
 
+import cats.syntax.CartesianBuilder
+
 object CartesianDemo extends App {
 
   import cats.Monoid
